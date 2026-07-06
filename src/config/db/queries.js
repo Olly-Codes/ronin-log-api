@@ -52,7 +52,7 @@ const getReviewDetails = async (reviewId) => {
 const getPublishedReviewDetails = async (reviewId) => {
     const { rows } = await pool.query(`
         SELECT r.review_id, r.title, r.body, r.score, r.cover_image_url,
-        r.published, r.created_at, d.name AS demographic,
+        r.published, r.created_at, r.updated_at, d.name AS demographic,
         mt.name AS media_type, json_agg(g.name) AS genres
         FROM reviews r
         LEFT JOIN demographics d ON r.demographic_id = d.demographic_id
