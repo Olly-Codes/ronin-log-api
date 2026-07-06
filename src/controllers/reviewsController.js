@@ -60,8 +60,41 @@ const postCreateReview = async (req, res, next) => {
     }
 };
 
+const patchReview = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { 
+            demographicId, 
+            mediaTypeId, 
+            genreIds, 
+            title, 
+            score, 
+            body, 
+            coverImageUrl,
+            published
+        } = req.body;
+
+        if (!title || !body || !mediaTypeId || !Array.isArray(genreIds) || genreIds.length === 0) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        const review = await db.patchExistingReview(id, {
+            demographicId, mediaTypeId, title, score, body, coverImageUrl, published, genreIds,
+        });
+
+        if (!review) {
+            return res.status(404).json({ error: "Review not found" });
+        }
+
+        res.status(200).json({ review });
+    } catch (err) {
+        next(err);
+    }
+};
+
 export default {
     getAllPublishedReviews,
     getPublishedReview,
-    postCreateReview
+    postCreateReview,
+    patchReview
 };

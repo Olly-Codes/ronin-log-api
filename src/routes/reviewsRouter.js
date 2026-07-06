@@ -8,4 +8,6 @@ reviewsRouter.get("/:id", reviewsController.getPublishedReview);
 
 reviewsRouter.post("/", reviewsController.postCreateReview);
 
+reviewsRouter.patch("/:id", reviewsController.patchReview);
+
 export default reviewsRouter;
