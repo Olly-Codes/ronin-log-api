@@ -45,8 +45,52 @@ const getPublishedReviewComments = async (reviewId) => {
     return rows;
 }
 
+const postCreateNewReview = async (
+    {
+        userId,
+        demographicId,
+        mediaTypeId,
+        title,
+        score,
+        body,
+        coverImageUrl,
+        genreIds
+    }
+) => {
+    const client = await pool.connect();
+    
+    try {
+        await client.query("BEGIN");
+
+        const { rows } = await client.query(`
+            INSERT INTO reviews (user_id, demographic_id, media_type_id, title, score, body, cover_image_url, published)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, false)
+            RETURNING review_id, title, body, score, cover_image_url, published, created_at;
+            `, [userId, demographicId, mediaTypeId, title, score, body, coverImageUrl]
+        );
+        const review = rows[0];
+
+        for (const genreId of genreIds) {
+            await client.query(`
+                INSERT INTO review_genres (review_id, genre_id)
+                VALUES ($1, $2);
+                `, [review.review_id, genreId]
+            );
+        }
+
+        await client.query("COMMIT");
+        return review;
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+
 export default {
     getAllPublishedReviews,
     getPublishedReviewDetails,
-    getPublishedReviewComments
+    getPublishedReviewComments,
+    postCreateNewReview
 }
