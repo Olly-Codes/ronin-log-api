@@ -89,6 +89,7 @@ const postCreateNewReview = async ({
     }
 ) => {
     const client = await pool.connect();
+    let reviewId;
     
     try {
         await client.query("BEGIN");
@@ -96,27 +97,28 @@ const postCreateNewReview = async ({
         const { rows } = await client.query(`
             INSERT INTO reviews (user_id, demographic_id, media_type_id, title, score, body, cover_image_url, published)
             VALUES ($1, $2, $3, $4, $5, $6, $7, false)
-            RETURNING review_id, title, body, score, cover_image_url, published, created_at;
+            RETURNING review_id;
             `, [userId, demographicId, mediaTypeId, title, score, body, coverImageUrl]
         );
-        const review = rows[0];
+        reviewId = rows[0].review_id;
 
         for (const genreId of genreIds) {
             await client.query(`
                 INSERT INTO review_genres (review_id, genre_id)
                 VALUES ($1, $2);
-                `, [review.review_id, genreId]
+                `, [reviewId, genreId]
             );
         }
 
         await client.query("COMMIT");
-        return review;
     } catch (err) {
         await client.query("ROLLBACK");
         throw err;
     } finally {
         client.release();
     }
+
+    return getReviewDetails(reviewId);
 };
 
 const patchExistingReview = async (
