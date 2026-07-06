@@ -36,7 +36,7 @@ const getAllPublishedReviews = async () => {
 const getReviewDetails = async (reviewId) => {
     const { rows } = await pool.query(`
         SELECT r.review_id, r.title, r.body, r.score, r.cover_image_url,
-        r.published, r.created_at, d.name AS demographic,
+        r.published, r.created_at, r.updated_at, d.name AS demographic,
         mt.name AS media_type, json_agg(g.name) AS genres
         FROM reviews r
         LEFT JOIN demographics d ON r.demographic_id = d.demographic_id
@@ -141,12 +141,11 @@ const patchExistingReview = async (
                     score = $4, body = $5, cover_image_url = $6, published = $7,
                     updated_at = NOW()
                 WHERE review_id = $8
-                RETURNING review_id, title, body, score, cover_image_url, published, created_at;
+                RETURNING review_id;
                 `, [demographicId, mediaTypeId, title, score, body, coverImageUrl, published, reviewId]
             );
-            const review = rows[0];
 
-            if (review.length === 0 || !review) {
+            if (rows.length === 0 || !rows) {
                 await client.query("ROLLBACK");
                 return null;
             }
@@ -165,13 +164,14 @@ const patchExistingReview = async (
             }
 
             await client.query("COMMIT");
-            return review;
         } catch (err) {
             await client.query("ROLLBACK");
             throw err;
         } finally {
             client.release();
         }
+
+        return getReviewDetails(reviewId);
 };
 
 export default {
@@ -179,6 +179,7 @@ export default {
     getAllPublishedReviews,
     getPublishedReviewDetails,
     getPublishedReviewComments,
+    getReviewDetails,
     postCreateNewReview,
     patchExistingReview
 }
