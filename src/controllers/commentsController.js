@@ -20,6 +20,23 @@ const postCreateComment = async (req, res, next) => {
     }
 }
 
+const deleteComment = async (req, res, next) => {
+
+    try {
+        const { id } = req.params;
+        const rowCount = await db.deleteExistingComment(id);
+
+        if (rowCount === 0) {
+            return res.status(404).json({ error: "Comment not found" });
+        }
+
+        res.status(204).send();
+    } catch (err) {
+        next(err);
+    }
+};
+
 export default {
-    postCreateComment
+    postCreateComment,
+    deleteComment
 }
