@@ -176,6 +176,17 @@ const patchExistingReview = async (
         return getReviewDetails(reviewId);
 };
 
+const postCreateNewComment = async (reviewId, userId, content) => {
+    const { rows } = await pool.query(`
+        INSERT INTO comments (review_id, user_id, content)
+        VALUES ($1, $2, $3)
+        RETURNING comment_id, content, created_at;
+        `, [reviewId, userId, content]
+    );
+    
+    return rows[0];
+}
+
 export default {
     getAllReviews,
     getAllPublishedReviews,
@@ -183,5 +194,6 @@ export default {
     getPublishedReviewComments,
     getReviewDetails,
     postCreateNewReview,
-    patchExistingReview
+    patchExistingReview,
+    postCreateNewComment
 }
