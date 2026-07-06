@@ -31,7 +31,37 @@ const getPublishedReview = async (req, res, next) => {
     }
 };
 
+const postCreateReview = async (req, res, next) => {
+    try {
+        const { 
+            demographicId, 
+            mediaTypeId, 
+            genreIds, 
+            title, 
+            score, 
+            body, 
+            coverImageUrl,
+        } = req.body;
+
+        if (!title || !body || !mediaTypeId || !Array.isArray(genreIds) || genreIds.length === 0) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // TODO: Change after testing
+        const userId = 1;
+
+        const review = await db.postCreateNewReview({
+            userId, demographicId, mediaTypeId, genreIds, title, score, body, coverImageUrl,
+        });
+
+        res.status(201).json({ review });
+    } catch (err) {
+        next(err);
+    }
+};
+
 export default {
     getAllPublishedReviews,
-    getPublishedReview
+    getPublishedReview,
+    postCreateReview
 };
