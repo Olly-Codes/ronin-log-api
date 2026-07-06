@@ -45,8 +45,7 @@ const getPublishedReviewComments = async (reviewId) => {
     return rows;
 }
 
-const postCreateNewReview = async (
-    {
+const postCreateNewReview = async ({
         userId,
         demographicId,
         mediaTypeId,
@@ -88,9 +87,65 @@ const postCreateNewReview = async (
     }
 };
 
+const patchExistingReview = async (
+    reviewId, {
+        demographicId,
+        mediaTypeId,
+        title,
+        score,
+        body,
+        coverImageUrl,
+        published,
+        genreIds
+    }) => {
+        const client = await pool.connect();
+
+        try {
+            await client.query("BEGIN");
+
+            const { rows } = await client.query(`
+                UPDATE reviews
+                SET demographic_id = $1, media_type_id = $2, title = $3,
+                    score = $4, body = $5, cover_image_url = $6, published = $7,
+                    updated_at = NOW()
+                WHERE review_id = $8
+                RETURNING review_id, title, body, score, cover_image_url, published, created_at;
+                `, [demographicId, mediaTypeId, title, score, body, coverImageUrl, published, reviewId]
+            );
+            const review = rows[0];
+
+            if (review.length === 0 || !review) {
+                await client.query("ROLLBACK");
+                return null;
+            }
+
+            await client.query(`
+                DELETE FROM review_genres WHERE review_id = $1;
+                `, [reviewId]
+            );
+
+            for (const genreId of genreIds) {
+                await client.query(`
+                    INSERT INTO review_genres (review_id, genre_id)
+                    VALUES ($1, $2);
+                    `, [reviewId, genreId]
+                );
+            }
+
+            await client.query("COMMIT");
+            return review;
+        } catch (err) {
+            await client.query("ROLLBACK");
+            throw err;
+        } finally {
+            client.release();
+        }
+};
+
 export default {
     getAllPublishedReviews,
     getPublishedReviewDetails,
     getPublishedReviewComments,
-    postCreateNewReview
+    postCreateNewReview,
+    patchExistingReview
 }
