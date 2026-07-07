@@ -85,6 +85,14 @@ const getGenres = async () => {
     return rows;
 };
 
+const getDemographics = async () => {
+    const { rows } = await pool.query(`
+        SELECT *
+        FROM demographics;
+        `);
+    return rows;
+};
+
 const postCreateNewReview = async ({
         userId,
         demographicId,
@@ -211,6 +219,7 @@ export default {
     getPublishedReviewComments,
     getReviewDetails,
     getGenres,
+    getDemographics,
     postCreateNewReview,
     postCreateNewComment,
     patchExistingReview,
