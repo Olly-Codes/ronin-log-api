@@ -93,6 +93,14 @@ const getDemographics = async () => {
     return rows;
 };
 
+const getMediaTypes = async () => {
+    const { rows } = await pool.query(`
+        SELECT *
+        FROM media_type;
+        `);
+    return rows;
+};
+
 const postCreateNewReview = async ({
         userId,
         demographicId,
@@ -219,6 +227,7 @@ export default {
     getPublishedReviewComments,
     getReviewDetails,
     getGenres,
+    getMediaTypes,
     getDemographics,
     postCreateNewReview,
     postCreateNewComment,
