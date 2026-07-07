@@ -12,4 +12,6 @@ reviewsRouter.post("/:id/comments", commentsController.postCreateComment);
 
 reviewsRouter.patch("/:id", reviewsController.patchReview);
 
+reviewsRouter.delete("/:id", reviewsController.deleteReview);
+
 export default reviewsRouter;

@@ -92,9 +92,43 @@ const patchReview = async (req, res, next) => {
     }
 };
 
+const deleteReview = async (req, res, next) => {
+
+    try {
+        const { id } = req.params;
+        const rowCount = await db.deleteExistingReview(id);
+
+        if (rowCount === 0) {
+            return res.status(404).json({ error: "Review not found" });
+        }
+
+        res.status(204).send();
+    } catch (err) {
+        next(err);
+    }
+}
+
+const deleteComment = async (req, res, next) => {
+
+    try {
+        const { id } = req.params;
+        const rowCount = await db.deleteExistingComment(id);
+
+        if (rowCount === 0) {
+            return res.status(404).json({ error: "Comment not found" });
+        }
+
+        res.status(204).send();
+    } catch (err) {
+        next(err);
+    }
+};
+
+
 export default {
     getAllPublishedReviews,
     getPublishedReview,
     postCreateReview,
-    patchReview
+    patchReview,
+    deleteReview
 };
