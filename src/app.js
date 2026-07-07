@@ -5,6 +5,7 @@ import indexRouter from "./routes/indexRouter.js";
 import reviewsRouter from "./routes/reviewsRouter.js";
 import commentsRouter from "./routes/commentsRouter.js";
 import genresRouter from "./routes/genresRouter.js";
+import demographicsRouter from "./routes/demographicsRouter.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/", indexRouter);
 app.use("/reviews", reviewsRouter);
 app.use("/comments", commentsRouter);
 app.use("/genres", genresRouter);
+app.use("/demographics", demographicsRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
