@@ -211,6 +211,14 @@ const postCreateNewComment = async (reviewId, userId, content) => {
     return rows[0];
 }
 
+const deleteExistingReview = async (reviewId) => {
+    const { rowCount } = await pool.query(`
+        DELETE FROM reviews
+        WHERE review_id = $1;
+        `, [reviewId]);
+    return rowCount;
+};
+
 const deleteExistingComment = async (commentId) => {
     const { rowCount } = await pool.query(`
         DELETE FROM comments
@@ -232,5 +240,6 @@ export default {
     postCreateNewReview,
     postCreateNewComment,
     patchExistingReview,
+    deleteExistingReview,
     deleteExistingComment
 }
