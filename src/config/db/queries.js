@@ -77,6 +77,14 @@ const getPublishedReviewComments = async (reviewId) => {
     return rows;
 }
 
+const getGenres = async () => {
+    const { rows } = await pool.query(`
+        SELECT *
+        FROM genres;
+        `);
+    return rows;
+};
+
 const postCreateNewReview = async ({
         userId,
         demographicId,
@@ -202,8 +210,9 @@ export default {
     getPublishedReviewDetails,
     getPublishedReviewComments,
     getReviewDetails,
+    getGenres,
     postCreateNewReview,
-    patchExistingReview,
     postCreateNewComment,
+    patchExistingReview,
     deleteExistingComment
 }
