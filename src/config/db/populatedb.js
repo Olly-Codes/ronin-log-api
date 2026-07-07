@@ -2,7 +2,15 @@ import "dotenv/config";
 import { Client } from "pg";
 
 const SQL = `
-CREATE TABLE IF NOT EXISTS users (
+DROP TABLE IF EXISTS comments CASCADE;
+DROP TABLE IF EXISTS review_genres CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS media_type CASCADE;
+DROP TABLE IF EXISTS genres CASCADE;
+DROP TABLE IF EXISTS demographics CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
+CREATE TABLE users (
     user_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -11,22 +19,22 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS demographics (
+CREATE TABLE demographics (
     demographic_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS genres (
+CREATE TABLE genres (
     genre_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS media_type (
+CREATE TABLE media_type (
     media_type_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS reviews (
+CREATE TABLE reviews (
     review_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INTEGER NOT NULL,
     demographic_id INTEGER,
@@ -38,25 +46,25 @@ CREATE TABLE IF NOT EXISTS reviews (
     published BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (user_id) REFERENCES users (user_id),
-    FOREIGN KEY (demographic_id) REFERENCES demographics (demographic_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (demographic_id) REFERENCES demographics (demographic_id) ON DELETE SET NULL,
     FOREIGN KEY (media_type_id) REFERENCES media_type (media_type_id)
 );
 
-CREATE TABLE IF NOT EXISTS review_genres (
-    review_id INTEGER NOT NULL REFERENCES reviews (review_id),
-    genre_id INTEGER NOT NULL REFERENCES genres (genre_id),
+CREATE TABLE review_genres (
+    review_id INTEGER NOT NULL REFERENCES reviews (review_id) ON DELETE CASCADE,
+    genre_id INTEGER NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
     PRIMARY KEY (review_id, genre_id)
 );
 
-CREATE TABLE IF NOT EXISTS comments (
+CREATE TABLE comments (
     comment_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     review_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (review_id) REFERENCES reviews (review_id),
-    FOREIGN KEY (user_id) REFERENCES users (user_id)
+    FOREIGN KEY (review_id) REFERENCES reviews (review_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
 INSERT INTO demographics (name)
