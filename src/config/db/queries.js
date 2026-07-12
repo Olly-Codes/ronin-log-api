@@ -238,6 +238,25 @@ const getUserId = async (id) => {
     return rows[0];
 };
 
+const getUserByEmail = async (email) => {
+    const { rows } = await pool.query(`
+        SELECT *
+        FROM users WHERE email = $1;
+        `, [email]
+    );
+    return rows[0];
+}
+
+const postCreateUser = async (username, email, password) => {
+    const { rows } = await pool.query(`
+        INSERT INTO users (username, email, password)
+        VALUES
+            ($1, $2, $3) RETURNING user_id, username, email, created_at;
+        `, [username, email, password]
+    );
+    return rows[0];
+}
+
 export default {
     getAllReviews,
     getAllPublishedReviews,
@@ -248,6 +267,8 @@ export default {
     getMediaTypes,
     getDemographics,
     getUserId,
+    getUserByEmail,
+    postCreateUser,
     postCreateNewReview,
     postCreateNewComment,
     patchExistingReview,
