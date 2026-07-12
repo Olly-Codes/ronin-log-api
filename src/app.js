@@ -7,6 +7,7 @@ import commentsRouter from "./routes/commentsRouter.js";
 import genresRouter from "./routes/genresRouter.js";
 import demographicsRouter from "./routes/demographicsRouter.js";
 import mediaTypesRouter from "./routes/mediaTypesRouter.js";
+import authRouter from "./routes/authRouter.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/comments", commentsRouter);
 app.use("/genres", genresRouter);
 app.use("/demographics", demographicsRouter);
 app.use("/media-types", mediaTypesRouter);
+app.use("/register", authRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
