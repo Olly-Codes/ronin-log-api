@@ -1,7 +1,7 @@
 import "dotenv/config";
 import passport from "passport";
 
-import db from "./db/queries";
+import db from "./db/queries.js";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
 const options = {
@@ -13,7 +13,7 @@ const options = {
 const strategy = new JwtStrategy(options, async (payload, done) => {
     
     try {
-        const user = await db.getUserId(payload.sub);
+        const user = await db.getUserIdRole(payload.sub);
 
         if (user) {
             return done(null, user);
