@@ -48,7 +48,7 @@ const postCreateReview = async (req, res, next) => {
         }
 
         // TODO: Change after testing
-        const userId = 1;
+        const userId = req.user.user_id;
 
         const review = await db.postCreateNewReview({
             userId, demographicId, mediaTypeId, genreIds, title, score, body, coverImageUrl,

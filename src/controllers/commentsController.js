@@ -6,8 +6,7 @@ const postCreateComment = async (req, res, next) => {
         const { id } = req.params;
         const { content } = req.body;
         
-        // TODO: Change once auth is implemented
-        const userId = 3;
+        const userId = req.user.user_id;
 
         if (!content || content.lengh === 0) {
             return res.status(400).json({ error: "Comment content is required" });
