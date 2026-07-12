@@ -228,6 +228,16 @@ const deleteExistingComment = async (commentId) => {
     return rowCount;
 };
 
+const getUserId = async (id) => {
+    const { rows } = await pool.query(`
+        SELECT user_id
+        FROM users
+        WHERE user_id = $1;
+        `, [id]
+    );
+    return rows[0];
+};
+
 export default {
     getAllReviews,
     getAllPublishedReviews,
@@ -237,6 +247,7 @@ export default {
     getGenres,
     getMediaTypes,
     getDemographics,
+    getUserId,
     postCreateNewReview,
     postCreateNewComment,
     patchExistingReview,
