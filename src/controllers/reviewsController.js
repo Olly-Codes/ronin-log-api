@@ -47,7 +47,6 @@ const postCreateReview = async (req, res, next) => {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        // TODO: Change after testing
         const userId = req.user.user_id;
 
         const review = await db.postCreateNewReview({
