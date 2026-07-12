@@ -44,6 +44,54 @@ const postRegister = async (req, res, next) => {
     }
 }
 
+const postLogin = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json(
+            {
+                error: "Missing required fields"
+            }
+        )
+    }
+
+    try {
+        const user = await db.getUserByEmail(email);
+
+        if (!user) {
+            return res.status(401).json(
+                {
+                    error: "Invalid username or password"
+                }
+            );
+        }
+
+        const isValid = await bcrypt.compare(password, user.password);
+
+        if (isValid) {
+            const tokenObject = JWT.issueJWT(user);
+            return res.status(200).json(
+                {
+                    id: user.user_id,
+                    username: user.username,
+                    email: user.email,
+                    token: tokenObject.token,
+                    expiresIn: tokenObject.expires
+                }
+            );
+        } else {
+            return res.status(401).json(
+                {
+                    error: "Invalid username or password"
+                }
+            );
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+
 export default {
-    postRegister
+    postRegister,
+    postLogin
 }
