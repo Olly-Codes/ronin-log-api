@@ -1,5 +1,6 @@
 import "dotenv/config";
-import pool from "./db/pool";
+import passport from "passport";
+
 import db from "./db/queries";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
@@ -24,3 +25,6 @@ const strategy = new JwtStrategy(options, async (payload, done) => {
     }
 });
 
+passport.use(strategy);
+
+export default passport;
