@@ -22,7 +22,7 @@ app.use("/comments", commentsRouter);
 app.use("/genres", genresRouter);
 app.use("/demographics", demographicsRouter);
 app.use("/media-types", mediaTypesRouter);
-app.use("/register", authRouter);
+app.use("/auth", authRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
