@@ -228,9 +228,9 @@ const deleteExistingComment = async (commentId) => {
     return rowCount;
 };
 
-const getUserId = async (id) => {
+const getUserIdRole = async (id) => {
     const { rows } = await pool.query(`
-        SELECT user_id
+        SELECT user_id, role
         FROM users
         WHERE user_id = $1;
         `, [id]
@@ -266,7 +266,7 @@ export default {
     getGenres,
     getMediaTypes,
     getDemographics,
-    getUserId,
+    getUserIdRole,
     getUserByEmail,
     postCreateUser,
     postCreateNewReview,
