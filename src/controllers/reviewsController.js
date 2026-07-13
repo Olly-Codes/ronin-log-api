@@ -27,7 +27,7 @@ const getPublishedReview = async (req, res, next) => {
             comments,
         });
     } catch (err) {
-        next(arr);
+        next(err);
     }
 };
 
