@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import passport from "./config/passport.js";
 
 import indexRouter from "./routes/indexRouter.js";
@@ -15,6 +16,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
+app.use(cors({
+    origin: "http://localhost:5173",
+}));
 
 app.use("/", indexRouter);
 app.use("/reviews", reviewsRouter);
