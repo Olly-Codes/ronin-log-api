@@ -4,6 +4,8 @@ Ronin Log allows an admin to publish reviews with genres, demographics, and medi
 
 This is the backend only that will sit behind a front end to consume like a dashboard for admin or a public facing platform to allow users to read and comment on reviews
 
+Full route documentation lives in [API.md](https://github.com/Olly-Codes/ronin-log-api/blob/main/API.md)
+
 ## Overview
 The reviews in Ronin Log are organized by media type, demographic, and genres. The reviews can in two states: published / unpublished which allows admin to write a review to later publish it if needed.
 Authentication is handled via JWTs and role-based access. Registered used can comment on reviews, and admin content is gated behind roles upon authenticaion.
@@ -48,6 +50,8 @@ npm run db
 ```bash
 npm run dev
 ```
+
+See [API.md](https://github.com/Olly-Codes/ronin-log-api/blob/main/API.md) for the full list of endpoints and auth requirements
 
 ## What I learned
 - Stateless authentication with JWT and `passport.js`
