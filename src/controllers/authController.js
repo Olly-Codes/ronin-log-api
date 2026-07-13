@@ -93,6 +93,7 @@ const postLogin = async (req, res, next) => {
                     id: user.user_id,
                     username: user.username,
                     email: user.email,
+                    role: user.role,
                     token: tokenObject.token,
                     expiresIn: tokenObject.expires
                 }
