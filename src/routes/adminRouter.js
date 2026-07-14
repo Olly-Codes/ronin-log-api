@@ -1,7 +1,7 @@
 import { Router } from "express";
 import adminController from "../controllers/adminController.js";
 import passport from "passport";
-import { requireAdmin } from "../config/middleware/auth";
+import { requireAdmin } from "../config/middleware/auth.js";
 
 const adminRouter = Router();
 
