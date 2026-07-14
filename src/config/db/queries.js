@@ -16,6 +16,15 @@ const getAllReviews = async () => {
     return rows;    
 }
 
+const getUsers = async () => {
+    const { rows } = await pool.query(`
+        SELECT user_id, username, email, role
+        FROM users;
+        `
+    );
+    return rows;
+}
+
 const getAllPublishedReviews = async () => {
     const { rows } = await pool.query(`
         SELECT r.review_id, r.title, r.score, r.cover_image_url,
@@ -263,6 +272,7 @@ export default {
     getPublishedReviewDetails,
     getPublishedReviewComments,
     getReviewDetails,
+    getUsers,
     getGenres,
     getMediaTypes,
     getDemographics,
