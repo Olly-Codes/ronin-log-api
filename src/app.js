@@ -10,6 +10,7 @@ import genresRouter from "./routes/genresRouter.js";
 import demographicsRouter from "./routes/demographicsRouter.js";
 import mediaTypesRouter from "./routes/mediaTypesRouter.js";
 import authRouter from "./routes/authRouter.js";
+import adminRouter from "./routes/adminRouter.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/genres", genresRouter);
 app.use("/demographics", demographicsRouter);
 app.use("/media-types", mediaTypesRouter);
 app.use("/auth", authRouter);
+app.use("/admin", adminRouter);
 
 app.use((req, res, next) => {
     const err = new Error("That route does not exist");
