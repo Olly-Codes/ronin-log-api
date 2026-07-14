@@ -1,5 +1,23 @@
 import db from "../config/db/queries.js";
 
+const getUsers = async (req, res, next) => {
+
+    try {
+        const users = await db.getUsers();
+
+        if (users) {
+            res.status(200).json(
+                {
+                    count: users.length,
+                    users
+                }
+            );
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+
 const getAllReviews = async (req, res, next) => {
 
     try {
@@ -16,4 +34,9 @@ const getAllReviews = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+}
+
+export default {
+    getAllReviews,
+    getUsers
 }
