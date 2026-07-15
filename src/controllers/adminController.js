@@ -20,7 +20,20 @@ const getUsers = async (req, res, next) => {
 
 const getAllReviews = async (req, res, next) => {
 
+    const { countOnly, publishedCount, unpublishedCount} = req.query;
+
     try {
+        if (countOnly) {
+            const reviewsCount = await db.getReviewsCount();
+            return res.status(200).json({ reviewsCount });
+        } else if (publishedCount) {
+            const published = await db.getPublishedReviewsCount();
+            return res.status(200).json({ published });
+        } else if (unpublishedCount) {
+            const unpublished = await db.getUnPublishedReviewsCount();
+            return res.status(200).json({ unpublished });
+        }
+        
         const reviews = await db.getAllReviews();
         
         if (reviews) {

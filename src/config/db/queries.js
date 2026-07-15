@@ -86,6 +86,35 @@ const getPublishedReviewComments = async (reviewId) => {
     return rows;
 }
 
+const getReviewsCount = async () => {
+    const { rows } = await pool.query(`
+        SELECT COUNT(*)
+        FROM reviews;
+        `
+    );
+    return rows[0];
+}
+
+const getPublishedReviewsCount = async () => {
+    const { rows } = await pool.query(`
+        SELECT COUNT(*)
+        FROM reviews
+        WHERE published = true;
+        `
+    );
+    return rows[0];
+}
+
+const getUnPublishedReviewsCount = async () => {
+    const { rows } = await pool.query(`
+        SELECT COUNT(*)
+        FROM reviews
+        WHERE published = false;
+        `
+    );
+    return rows[0];
+}
+
 const getGenres = async () => {
     const { rows } = await pool.query(`
         SELECT *
@@ -272,6 +301,9 @@ export default {
     getPublishedReviewDetails,
     getPublishedReviewComments,
     getReviewDetails,
+    getReviewsCount,
+    getPublishedReviewsCount,
+    getUnPublishedReviewsCount,
     getUsers,
     getGenres,
     getMediaTypes,
