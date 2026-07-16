@@ -1,5 +1,18 @@
 import db from "../config/db/queries.js";
 
+
+const getComments = async (req, res, next) => {
+
+    const { countOnly } = req.query;
+
+    if (countOnly) {
+        const commentsCount = await db.getCommentsCount();
+        return res.status(200).json({ commentsCount });
+    }
+
+    return res.status(200).json({ msg: "reserved for counts only for now" });
+}
+
 const postCreateComment = async (req, res, next) => {
     
     try {
@@ -36,6 +49,7 @@ const deleteComment = async (req, res, next) => {
 };
 
 export default {
+    getComments,
     postCreateComment,
     deleteComment
 }

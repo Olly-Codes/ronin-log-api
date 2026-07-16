@@ -249,6 +249,15 @@ const postCreateNewComment = async (reviewId, userId, content) => {
     return rows[0];
 }
 
+const getCommentsCount = async () => {
+    const { rows } = await pool.query(`
+        SELECT COUNT(*)
+        FROM comments;
+        `
+    );
+    return rows[0];
+}
+
 const deleteExistingReview = async (reviewId) => {
     const { rowCount } = await pool.query(`
         DELETE FROM reviews
@@ -304,6 +313,7 @@ export default {
     getReviewsCount,
     getPublishedReviewsCount,
     getUnPublishedReviewsCount,
+    getCommentsCount,
     getUsers,
     getGenres,
     getMediaTypes,
