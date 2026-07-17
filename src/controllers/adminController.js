@@ -61,7 +61,46 @@ const getAllReviews = async (req, res, next) => {
     }
 }
 
+const getReviewbyId = async (req, res, next) => {
+
+    const { id } = req.params;
+
+    try {
+        const review = await db.getReviewDetails(id);
+
+        if (!review) return res.status(404).json({ error: "Review not found" });
+
+        const comments = await db.getPublishedReviewComments(id);
+
+        res.status(200).json({
+            review,
+            comments,
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
+const getPublishedReview = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const review = await db.getPublishedReviewDetails(id);
+
+        if (!review) return res.status(404).json({ error: "Review not found" });
+
+        const comments = await db.getPublishedReviewComments(id);
+
+        res.status(200).json({
+            review,
+            comments,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
 export default {
     getAllReviews,
+    getReviewbyId,
     getUsers
 }

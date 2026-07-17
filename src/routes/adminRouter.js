@@ -6,6 +6,7 @@ import { requireAdmin } from "../config/middleware/auth.js";
 const adminRouter = Router();
 
 adminRouter.get("/reviews", passport.authenticate("jwt", { session: false }), requireAdmin, adminController.getAllReviews);
+adminRouter.get("/reviews/:id", passport.authenticate("jwt", { session: false }), requireAdmin, adminController.getReviewbyId);
 adminRouter.get("/users", passport.authenticate("jwt", { session: false }), requireAdmin, adminController.getUsers)
 
 export default adminRouter;
