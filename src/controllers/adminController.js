@@ -1,4 +1,5 @@
 import db from "../config/db/queries.js";
+import { sortData } from "../utils/sortData.js";
 
 const getUsers = async (req, res, next) => {
 
@@ -20,7 +21,7 @@ const getUsers = async (req, res, next) => {
 
 const getAllReviews = async (req, res, next) => {
 
-    const { countOnly, publishedCount, unpublishedCount} = req.query;
+    const { countOnly, publishedCount, unpublishedCount, sort } = req.query;
 
     try {
         if (countOnly) {
@@ -37,6 +38,17 @@ const getAllReviews = async (req, res, next) => {
         const reviews = await db.getAllReviews();
         
         if (reviews) {
+
+            if (sort) {
+                const sortedReviews = sortData(reviews, sort.toLowerCase());
+                return res.status(200).json(
+                    {
+                        count: sortedReviews.length,
+                        sortedReviews
+                    }
+                );
+            }
+
             res.status(200).json(
                 {
                     count: reviews.length,
