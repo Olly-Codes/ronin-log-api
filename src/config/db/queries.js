@@ -86,6 +86,18 @@ const getPublishedReviewComments = async (reviewId) => {
     return rows;
 }
 
+const getReviewComments = async (reviewId) => {
+    const { rows } = await pool.query(`
+        SELECT c.comment_id, c.content, c.created_at, u.username
+        FROM comments c
+        JOIN users u ON c.user_id = u.user_id
+        JOIN reviews r ON c.review_id = r.review_id
+        WHERE c.review_id
+        ORDER BY c.created_at DESC;`, [reviewId]
+    );
+    return rows;
+}
+
 const getReviewsCount = async () => {
     const { rows } = await pool.query(`
         SELECT COUNT(*)
@@ -322,6 +334,7 @@ export default {
     getAllPublishedReviews,
     getPublishedReviewDetails,
     getPublishedReviewComments,
+    getReviewComments,
     getReviewDetails,
     getReviewsCount,
     getPublishedReviewsCount,
