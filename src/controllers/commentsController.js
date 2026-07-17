@@ -5,12 +5,22 @@ const getComments = async (req, res, next) => {
 
     const { countOnly } = req.query;
 
-    if (countOnly) {
-        const commentsCount = await db.getCommentsCount();
-        return res.status(200).json({ commentsCount });
-    }
+    try {
+        if (countOnly) {
+            const commentsCount = await db.getCommentsCount();
+            return res.status(200).json({ commentsCount });
+        }
 
-    return res.status(200).json({ msg: "reserved for counts only for now" });
+        const comments = await db.getComments();
+
+        if (comments) {
+            return res.status(200).json({ comments });
+        }
+
+
+    } catch (err) {
+        next(err);
+    }
 }
 
 const postCreateComment = async (req, res, next) => {
