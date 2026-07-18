@@ -70,7 +70,7 @@ const getReviewbyId = async (req, res, next) => {
 
         if (!review) return res.status(404).json({ error: "Review not found" });
 
-        const comments = await db.getPublishedReviewComments(id);
+        const comments = await db.getReviewComments(id);
 
         res.status(200).json({
             review,
