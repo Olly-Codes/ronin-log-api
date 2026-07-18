@@ -92,7 +92,7 @@ const getReviewComments = async (reviewId) => {
         FROM comments c
         JOIN users u ON c.user_id = u.user_id
         JOIN reviews r ON c.review_id = r.review_id
-        WHERE c.review_id
+        WHERE c.review_id = $1
         ORDER BY c.created_at DESC;`, [reviewId]
     );
     return rows;
