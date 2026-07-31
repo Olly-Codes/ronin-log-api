@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import db from "../config/db/queries.js";
-import JWT from "../utils/issueJwt.js";
+import JWT from "../utils/issueJWT.js";
 
 const postRegister = async (req, res, next) => {
     const { username, email, password } = req.body;
