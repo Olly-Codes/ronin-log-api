@@ -14,7 +14,7 @@ import adminRouter from "./routes/adminRouter.js";
 
 const app = express();
 const allowedOrigins = [
-    "http:localhost:5173",
+    "http://localhost:5173",
     process.env.CLIENT_URL
 ];
 
