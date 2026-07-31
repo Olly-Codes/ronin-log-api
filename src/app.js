@@ -42,7 +42,9 @@ app.use((err, req, res, next) => {
     const errorMessage = statusCode === 500 ?
     "Something went wrong on our end!" : err.message;
 
+    if (process.env.NODE_ENV !== "production") {
         console.error(err.stack);
+    }
 
     res.status(statusCode).json(
         {
